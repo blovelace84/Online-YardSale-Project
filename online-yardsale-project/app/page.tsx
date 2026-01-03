@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabaseClient";
+import { ItemGrid } from "@/components/ItemGrid";
 
 export default async function Home() {
   const { data: items, error } = await supabase
