@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabaseClient";
 import { ItemGrid } from "@/components/ItemGrid";
+import { StatusBanner } from "@/components/StatusBanner";
 import { Item } from "@/types/item";
 
 export default async function Home() {
@@ -18,6 +19,7 @@ export default async function Home() {
     <main className="max-w-5xl mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Tee St Yard Sale</h1>
 
+      <StatusBanner />
       <ItemGrid items={items} />
     </main>
   );

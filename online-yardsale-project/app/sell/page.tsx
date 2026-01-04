@@ -1,47 +1,46 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function SellPage() {
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [contact, setContact] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     let imageUrl: string | null = null;
 
-    // 1. Upload image if provided
+    // Upload image (if provided)
     if (image) {
-      const fileExt = image.name.split(".").pop();
-      const fileName = `${crypto.randomUUID()}.${fileExt}`;
+      const ext = image.name.split(".").pop();
+      const fileName = `${crypto.randomUUID()}.${ext}`;
 
       const { error: uploadError } = await supabase.storage
         .from("items")
         .upload(fileName, image);
 
       if (uploadError) {
-        setError(uploadError.message);
-        setLoading(false);
+        router.push("/?status=error");
         return;
       }
 
-      // 2. Get public URL
       const { data } = supabase.storage.from("items").getPublicUrl(fileName);
 
       imageUrl = data.publicUrl;
     }
 
-    // 3. Insert item into DB
-    const { error: insertError } = await supabase.from("items").insert({
+    // Insert item
+    const { error } = await supabase.from("items").insert({
       title: name,
       price: Number(price),
       description,
@@ -49,21 +48,13 @@ export default function SellPage() {
       image_url: imageUrl,
     });
 
-    setLoading(false);
-
-    if (insertError) {
-      setError(insertError.message);
+    if (error) {
+      router.push("/?status=error");
       return;
     }
 
-    // Reset form
-    setName("");
-    setPrice("");
-    setDescription("");
-    setContact("");
-    setImage(null);
-
-    alert("Item posted!");
+    // Redirect to homepage with success message
+    router.push("/?status=success");
   }
 
   return (
@@ -71,7 +62,7 @@ export default function SellPage() {
       <h1 className="text-2xl font-bold mb-6">Sell an Item</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Item Name */}
+        {/* Item name */}
         <input
           required
           placeholder="Item name"
@@ -100,24 +91,24 @@ export default function SellPage() {
           rows={4}
         />
 
-        {/* Contact */}
+        {/* Contact info */}
         <input
-          placeholder="Contact info"
+          placeholder="Contact info (email or phone)"
           value={contact}
           onChange={(e) => setContact(e.target.value)}
           className="w-full rounded border p-2"
         />
 
-        {/* Image Upload */}
+        {/* Image upload */}
         <input
           type="file"
           accept="image/*"
           onChange={(e) => setImage(e.target.files?.[0] ?? null)}
         />
 
-        {error && <p className="text-red-600 text-sm">{error}</p>}
-
+        {/* Submit button */}
         <button
+          type="submit"
           disabled={loading}
           className="w-full rounded bg-black text-white py-2 disabled:opacity-50"
         >
