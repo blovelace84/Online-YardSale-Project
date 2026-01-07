@@ -7,6 +7,21 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
+function getContactLink(contact: string) {
+  const trimmed = contact.trim();
+
+  if (trimmed.includes("@")) {
+    return `mailto:${trimmed}`;
+  }
+
+  const digits = trimmed.replace(/[^\d+]/g, "");
+  if (digits.length === 0) {
+    return `tel:${digits}`;
+  }
+
+  return null;
+}
+
 export default async function ItemDetailPage({ params }: PageProps) {
   const { id } = await params;
 
@@ -59,9 +74,19 @@ export default async function ItemDetailPage({ params }: PageProps) {
           )}
 
           {item.contact && (
-            <div className="mt-8 rounded-xl border bg-gray-50 p-4">
-              <p className="text-sm text-gray-500 mb-1">Contact seller</p>
-              <p className="text-lg font-medium">{item.contact}</p>
+            <div className="mt-8 rounded-xl border bg-gray-50 p-5">
+              <h1 className="text-sm text-gray-500 mb-2">Contact seller</h1>
+
+              {/* <p className="font-medium-mb-4">{item.contact}</p> */}
+
+              {getContactLink(item.contact) && (
+                <a
+                  href={getContactLink(item.contact)!}
+                  className="inline-flex items-center justify-center rounded-lg bg-black px-5 py-3 text-white font-white hover:bg-gray-800 transition"
+                >
+                  Contact Seller
+                </a>
+              )}
             </div>
           )}
         </div>
