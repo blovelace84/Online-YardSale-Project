@@ -2,6 +2,8 @@ import { supabase } from "@/lib/supabaseClient";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { ContactSeller } from "@/components/ContactSeller";
+import { ContactSellerForm } from "@/components/ContactSellerForm";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -78,28 +80,9 @@ export default async function ItemDetailPage({ params }: PageProps) {
             </p>
           )}
 
-      {item.contact && (
-        <div className="mt-8 rounded-xl border bg-gray-50 p-5">
-          <p className="text-sm text-gray-500 mb-2">
-            Contact seller
-          </p>
-
-          <p className="font-medium mb-4 break-all">
-            {item.contact}
-          </p>
-
-          {getContactLink(item.contact) && (
-            <a
-              href={getContactLink(item.contact)!}
-              className="inline-flex items-center justify-center rounded-lg bg-black px-5 py-3 text-white font-medium hover:bg-gray-800 transition"
-            >
-              Contact Seller
-            </a>
-          )}
+          <ContactSeller itemId={item.id} contact={item.contact} />
         </div>
-      )}
+      </div>
     </div>
-  </div>
-</div>
   );
 }
