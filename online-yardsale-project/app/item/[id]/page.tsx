@@ -8,15 +8,20 @@ type PageProps = {
 };
 
 function getContactLink(contact: string) {
-  const trimmed = contact.trim();
+  const text = contact.trim();
 
-  if (trimmed.includes("@")) {
-    return `mailto:${trimmed}`;
+  // Email detection
+  const emailMatch = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+
+  if (emailMatch) {
+    return `mailto:${emailMatch[0]}`;
   }
 
-  const digits = trimmed.replace(/[^\d+]/g, "");
-  if (digits.length === 0) {
-    return `tel:${digits}`;
+  // Phone detection
+  const phoneMatch = text.replace(/[^\d+]/g, "");
+
+  if (phoneMatch.length >= 7) {
+    return `tel:${phoneMatch}`;
   }
 
   return null;
@@ -73,24 +78,28 @@ export default async function ItemDetailPage({ params }: PageProps) {
             </p>
           )}
 
-          {item.contact && (
-            <div className="mt-8 rounded-xl border bg-gray-50 p-5">
-              <h1 className="text-sm text-gray-500 mb-2">Contact seller</h1>
+      {item.contact && (
+        <div className="mt-8 rounded-xl border bg-gray-50 p-5">
+          <p className="text-sm text-gray-500 mb-2">
+            Contact seller
+          </p>
 
-              {/* <p className="font-medium-mb-4">{item.contact}</p> */}
+          <p className="font-medium mb-4 break-all">
+            {item.contact}
+          </p>
 
-              {getContactLink(item.contact) && (
-                <a
-                  href={getContactLink(item.contact)!}
-                  className="inline-flex items-center justify-center rounded-lg bg-black px-5 py-3 text-white font-white hover:bg-gray-800 transition"
-                >
-                  Contact Seller
-                </a>
-              )}
-            </div>
+          {getContactLink(item.contact) && (
+            <a
+              href={getContactLink(item.contact)!}
+              className="inline-flex items-center justify-center rounded-lg bg-black px-5 py-3 text-white font-medium hover:bg-gray-800 transition"
+            >
+              Contact Seller
+            </a>
           )}
         </div>
-      </div>
+      )}
     </div>
+  </div>
+</div>
   );
 }
