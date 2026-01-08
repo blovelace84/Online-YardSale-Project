@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-
+import { sendContactMessage } from "@/app/actions/sendContactMessage";
 type Props = {
   itemId: string;
   onSuccess?: () => void;
@@ -20,21 +20,20 @@ export function ContactSellerForm({ itemId, onSuccess }: Props) {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.from("messages").insert({
-      item_id: itemId,
-      buyer_name: name,
-      buyer_contact: contact,
-      message,
-    });
+    try {
+      await sendContactMessage({
+        itemId,
+        buyerName: name,
+        buyerContact: contact,
+        message,
+      });
 
-    if (error) {
+      setLoading(false);
+      onSuccess?.();
+    } catch (err) {
       setError("Failed to send message");
       setLoading(false);
-      return;
     }
-
-    setLoading(false);
-    onSuccess?.();
   }
 
   return (
