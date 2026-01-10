@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LogoutButton from "../auth/LogoutButton";
 
 export default function Navbar() {
   return (
@@ -26,6 +27,7 @@ export default function Navbar() {
           <Link href="/login" className="text-gray-700 hover:text-gray-900">
             Login
           </Link>
+          <LogoutButton />
         </div>
       </div>
     </nav>
