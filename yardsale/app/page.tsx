@@ -15,7 +15,9 @@ export default async function HomePage() {
     <main className="max-w-6xl mx-auto p-6">
       {/* Header */}
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">YardSale</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Tee Dee St. YardSale
+        </h1>
         <p className="mt-2 text-gray-700">Buy and sell items locally</p>
       </header>
 
