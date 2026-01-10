@@ -9,6 +9,7 @@ import Button from "@/components/ui/Button";
 export default function LoginForm() {
   const supabase = createClient();
   const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
