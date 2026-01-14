@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { createServerClient } from "@supabase/ssr";
 import LogoutButton from "@/components/auth/LogoutButton";
 
 export default async function Navbar() {
@@ -14,11 +14,6 @@ export default async function Navbar() {
         async getAll() {
           return (await cookieStore).getAll();
         },
-        async setAll(cookiesToSet) {
-          for (const { name, value, options } of cookiesToSet) {
-            (await cookieStore).set(name, value, options);
-          }
-        },
       },
     }
   );
@@ -28,44 +23,23 @@ export default async function Navbar() {
   } = await supabase.auth.getUser();
 
   return (
-    <nav className="border-b bg-white">
-      <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold text-gray-900">
+    <nav className="w-full border-b bg-white">
+      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+        <Link href="/" className="font-bold">
           YardSale
         </Link>
 
-        <div className="flex items-center gap-6 text-sm">
-          <Link href="/" className="text-gray-700 hover:text-gray-900">
-            Home
-          </Link>
-
+        <div className="flex items-center gap-4">
           {user ? (
             <>
-              <Link href="/sell" className="text-gray-700 hover:text-gray-900">
-                Sell
-              </Link>
-
-              <Link
-                href="/dashboard"
-                className="text-gray-700 hover:text-gray-900"
-              >
-                Dashboard
-              </Link>
-
+              <Link href="/dashboard">Dashboard</Link>
+              <Link href="/sell">Sell</Link>
               <LogoutButton />
             </>
           ) : (
             <>
-              <Link href="/login" className="text-gray-700 hover:text-gray-900">
-                Login
-              </Link>
-
-              <Link
-                href="/register"
-                className="text-gray-700 hover:text-gray-900"
-              >
-                Create Account
-              </Link>
+              <Link href="/login">Login</Link>
+              <Link href="/register">Create account</Link>
             </>
           )}
         </div>
